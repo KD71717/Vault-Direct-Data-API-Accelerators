@@ -5,7 +5,7 @@ from accelerators.databricks.connections.databricks_connection import Databricks
 from common.services.database_service import DatabaseService
 from common.utilities import log_message, update_table_name_that_starts_with_digit
 
-
+# note: seems like a migration service from Veeva vault to Databricks
 class DatabricksService(DatabaseService):
     def __init__(self, parameters: dict):
         super().__init__(parameters)
@@ -29,6 +29,7 @@ class DatabricksService(DatabaseService):
 
     @staticmethod
     def create_sql_str(table_df: DataFrame) -> str:
+        # note: where did the length part go?
         """
         Generates a SQL string for creating or modifying table columns in Databricks.
 
@@ -53,6 +54,7 @@ class DatabricksService(DatabaseService):
         return query_result[0][0] > 0
 
     def retrieve_column_info(self, table_name):
+        # note: gettng the column information for a specific table
         existing_columns_query = f"""
         SELECT column_name, data_type 
         FROM {self.catalog}.information_schema.columns 
@@ -64,6 +66,7 @@ class DatabricksService(DatabaseService):
 
         # Convert to dictionary for quick lookup
         return {
+            # note: seems like the first part is defining the structure of the table to be returned
             row['column_name'].lower(): {
                 "data_type": row["data_type"].lower()
             }
@@ -71,18 +74,24 @@ class DatabricksService(DatabaseService):
         }
 
     def create_all_tables(self, starting_directory: str, metadata_table: pd.DataFrame):
-
+        
+        # note: seems like in this context the extract column is used to define the table names
         unique_extract_values = metadata_table["extract"].unique()
 
+        # note: create tables
         for extract in unique_extract_values:
+            # note: filter metadata for the current table
             filtered_metadata = metadata_table[metadata_table["extract"] == extract]
+            # note: update the table name if it starts with a digit, so seems like veeva vault supports table names starting with digits
             new_table_name = update_table_name_that_starts_with_digit(extract.split(".")[1])
             self.create_single_table(table_name=new_table_name, filtered_metadata=filtered_metadata)
 
         # Create metadata table
+        # note: seems like the metadata table is used to store information about all tables
         column_definitions = {col: ["STRING"] for col in metadata_table.columns}
         new_metadata_df = pd.DataFrame.from_dict(column_definitions).astype(str)
-        new_metadata_df.loc["length"] = 1000
+        new_metadata_df.loc["length"] = 1000 # note: setting a default length for all columns, is this appropriate?
+        # note: string vs int
         new_metadata_df = new_metadata_df.T.reset_index()
         new_metadata_df.columns = ["column_name", "type", "length"]
 
@@ -183,7 +192,7 @@ class DatabricksService(DatabaseService):
                     """)
 
     def process_delete(self, row: pd.Series, starting_directory: str, file_extension: str, file_format_name: str):
-        raw_table = row["extract"].split(".")[1]
+        raw_table = row["extract"].split(".")[1] # note: extracting the table name from the extract column
         related_file = row["file"]
         if file_extension == ".parquet":
             related_file = related_file.replace(".csv", ".parquet")
