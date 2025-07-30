@@ -3,7 +3,6 @@ from databricks import sql
 from common.connections.database_connection import DatabaseConnection
 from common.utilities import log_message
 
-
 class DatabricksConnection(DatabaseConnection):
     """
         Initializes the Databricks connection with the given parameters.

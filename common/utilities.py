@@ -69,6 +69,9 @@ def update_table_name_that_starts_with_digit(table_name: str) -> str:
     :param table_name: The name of the table that needs to be updated
     :return: The updated table name
     """
+    # note: this applies to databricks as well
+    # https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-identifiers
+    # TODO: do we need to handle this for column names as well?
     if table_name.isdigit():
         return f'n_{table_name}'
     else:
