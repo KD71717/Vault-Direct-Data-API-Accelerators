@@ -1,8 +1,9 @@
-import importlib
+# +++
+import importlib # TODO: not used anymore?
 import json
-import os
-import sys
-from io import BytesIO
+import os # TODO: not used anymore?
+import sys # TODO: not used anymore?
+from io import BytesIO # TODO: not used anymore?
 import datetime
 import traceback
 
@@ -43,23 +44,49 @@ def read_json_file(file_path: str) -> dict:
                     message=f'Error: Failed to decode JSON',
                     exception=e)
         return {}
+    # TODO: added more exceptions below, are these sufficient?
+    except PermissionError as e:
+        log_message(log_level='Error',
+                    message=f'Error: Permission denied accessing {file_path}.',
+                    exception=e)
+        return {}
+    except IsADirectoryError as e:
+        log_message(log_level='Error',
+                    message=f'Error: {file_path} is a directory, not a file.',
+                    exception=e)
+        return {}
+    except UnicodeDecodeError as e:
+        log_message(log_level='Error',
+                    message=f'Error: Unable to decode file {file_path} as text.',
+                    exception=e)
+        return {}
+    except OSError as e:
+        log_message(log_level='Error',
+                    message=f'Error: OS error occurred while accessing {file_path}.',
+                    exception=e)
+        return {}
+    except Exception as e:
+        log_message(log_level='Error',
+                    message=f'Error: Unexpected error reading {file_path}.',
+                    exception=e)
+        return {}
 
+# TODO: not needed anymore?
+# def import_libraries(file_path: str):
+#     try:
+#         with open(file_path, 'r') as file:
+#             libraries = file.read().splitlines()
 
-def import_libraries(file_path: str):
-    try:
-        with open(file_path, 'r') as file:
-            libraries = file.read().splitlines()
-
-        for library in libraries:
-            if library.strip():  # Ignore empty lines
-                try:
-                    importlib.import_module(library)
-                    print(f"Successfully imported {library}")
-                except ImportError:
-                    print(f"Error: Could not import {library}. Is it installed?")
-    except FileNotFoundError:
-        print(f"Error: File '{file_path}' not found.")
-        sys.exit(1)
+#         for library in libraries:
+#             if library.strip():  # Ignore empty lines
+#                 try:
+#                     importlib.import_module(library)
+#                     print(f"Successfully imported {library}")
+#                 except ImportError:
+#                     print(f"Error: Could not import {library}. Is it installed?")
+#     except FileNotFoundError:
+#         print(f"Error: File '{file_path}' not found.")
+#         sys.exit(1)
 
 
 def update_table_name_that_starts_with_digit(table_name: str) -> str:
@@ -72,6 +99,7 @@ def update_table_name_that_starts_with_digit(table_name: str) -> str:
     # note: this applies to databricks as well
     # https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-identifiers
     # TODO: do we need to handle this for column names as well?
+    # TODO: is there possibility for a table name to not start with _ or a alphabet? cause if so we need to take in account of that too
     if table_name.isdigit():
         return f'n_{table_name}'
     else:

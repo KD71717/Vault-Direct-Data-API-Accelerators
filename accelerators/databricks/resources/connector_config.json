@@ -18,7 +18,7 @@
     "catalog": "user",
     "schema": "vault_developer_experience",
     "external_storage": "s3-bucket-name",
-    "infer_schema": false,
+    "infer_schema": false, 
     "server_hostname": "cholecap-prod.cloud.databricks.com",
     "http_path": "sql/protocolv1/o/123456789/1234-567890-abcde",
     "access_token": "abcde123456789"

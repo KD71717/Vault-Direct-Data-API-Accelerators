@@ -1,3 +1,4 @@
+# ++
 import sys
 
 from accelerators.databricks.scripts import download_and_unzip_direct_data_files, extract_doc_content
@@ -27,6 +28,7 @@ def main():
     s3_service: AwsS3Service = AwsS3Service(s3_params)
     databricks_service: DatabricksService = DatabricksService(databricks_params)
 
+    # TODO need to read below lines
     direct_data_to_object_storage.run(vault_service=vault_service,
                                       s3_service=s3_service,
                                       direct_data_params=direct_data_params)

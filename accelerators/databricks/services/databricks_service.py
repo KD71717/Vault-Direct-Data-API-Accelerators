@@ -1,3 +1,4 @@
+# +++
 import pandas as pd
 from pandas import DataFrame
 
@@ -5,7 +6,6 @@ from accelerators.databricks.connections.databricks_connection import Databricks
 from common.services.database_service import DatabaseService
 from common.utilities import log_message, update_table_name_that_starts_with_digit
 
-# note: seems like a migration service from Veeva vault to Databricks
 class DatabricksService(DatabaseService):
     def __init__(self, parameters: dict):
         super().__init__(parameters)
@@ -36,6 +36,7 @@ class DatabricksService(DatabaseService):
         :param table_df: A DataFrame containing column details (column_name, type, length).
         :return: A partial SQL string defining the table columns.
         """
+        # TODO: where did the length part go?
         column_definitions = []
 
         for _, row in table_df.iterrows():
@@ -90,7 +91,7 @@ class DatabricksService(DatabaseService):
         # note: seems like the metadata table is used to store information about all tables
         column_definitions = {col: ["STRING"] for col in metadata_table.columns}
         new_metadata_df = pd.DataFrame.from_dict(column_definitions).astype(str)
-        new_metadata_df.loc["length"] = 1000 # note: setting a default length for all columns, is this appropriate?
+        new_metadata_df.loc["length"] = 1000 # note: setting a default length for all columns, TODO is this appropriate?
         # note: string vs int
         new_metadata_df = new_metadata_df.T.reset_index()
         new_metadata_df.columns = ["column_name", "type", "length"]

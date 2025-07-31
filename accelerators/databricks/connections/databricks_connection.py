@@ -1,3 +1,4 @@
+# +++
 from databricks import sql
 
 from common.connections.database_connection import DatabaseConnection
@@ -61,3 +62,8 @@ class DatabricksConnection(DatabaseConnection):
         result = cursor.fetchall()
         cursor.close()
         return result
+
+# TODO: modify the information for
+# connector_config.json
+# vapil_settings.json
+# why is there a time end for direct data?
