@@ -1,3 +1,4 @@
+
 from abc import ABC, abstractmethod
 from common.connections.database_connection import DatabaseConnection
 

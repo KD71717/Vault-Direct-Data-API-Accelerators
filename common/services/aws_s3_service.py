@@ -1,4 +1,4 @@
-# +++
+
 import os
 import time
 from common.services.object_storage_service import ObjectStorageService

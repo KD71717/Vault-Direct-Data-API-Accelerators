@@ -1,4 +1,4 @@
-# +++
+
 # TODO: many instances of lack of input verification and error handling
 from databricks import sql
 

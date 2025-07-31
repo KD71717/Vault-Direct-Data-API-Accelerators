@@ -1,4 +1,4 @@
-# +++
+
 # TODO: clean up imports, remove unused ones
 import importlib 
 import json
@@ -81,7 +81,7 @@ def update_table_name_that_starts_with_digit(table_name: str) -> str:
     # https://docs.databricks.com/aws/en/sql/language-manual/sql-ref-identifiers
     # TODO: do we need to handle this for column names as well?
     # MODIFIED: proposed change
-    if table_name.startswith('_') or table_name[0].isalpha():
+    if table_name and (table_name.startswith('_') or table_name[0].isalpha()):
         return table_name
     else:
         return f'_{table_name}'

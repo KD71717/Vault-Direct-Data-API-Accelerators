@@ -8,11 +8,14 @@ from common.api.model.response.vault_response import VaultResponse
 from common.services.aws_s3_service import AwsS3Service
 from common.services.vault_service import VaultService
 
-
+# download from Vault and upload to S3 bucket
 def _handle_multipart_upload(s3_service: AwsS3Service, vault_service: VaultService,
                              direct_data_item: DirectDataResponse.DirectDataItem, object_key: str):
     log_message(log_level='Info',
                 message=f'Handling multipart upload')
+    
+    upload_id = None  # MODIFIED Initialize upload_id to handle exception cases
+    
     try:
         multipart_upload_response: dict = s3_service.create_multipart_upload(
             key=object_key)
@@ -44,16 +47,26 @@ def _handle_multipart_upload(s3_service: AwsS3Service, vault_service: VaultServi
                     message=f'Multipart upload completed with upload ID: {upload_id}')
 
     except Exception as e:
-        # Abort the multipart upload in case of an error
-        s3_service.abort_multipart_upload(
-            key=object_key,
-            upload_id=upload_id)
-
-        log_message(log_level='Error',
-                    message=f'Multipart upload aborted with upload ID: {upload_id}',
-                    exception=e)
+        # MODIFIED: Only abort the multipart upload if it was successfully created
+        if upload_id is not None:
+            try:
+                s3_service.abort_multipart_upload(
+                    key=object_key,
+                    upload_id=upload_id)
+                
+                log_message(log_level='Error',
+                            message=f'Multipart upload aborted with upload ID: {upload_id}',
+                            exception=e)
+            except Exception as abort_error:
+                log_message(log_level='Error',
+                            message=f'Failed to abort multipart upload with upload ID: {upload_id}',
+                            exception=abort_error)
+        else:
+            log_message(log_level='Error',
+                        message=f'Failed to create multipart upload',
+                        exception=e)
+        
         raise e
-
 
 def run(vault_service: VaultService, s3_service: AwsS3Service, direct_data_params: dict):
     log_message(log_level='Info',

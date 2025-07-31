@@ -1,3 +1,4 @@
+
 import gzip
 import os
 import sys
@@ -19,7 +20,9 @@ def convert_csv_to_parquet(file_content: bytes, extract_file_path: str):
                 message=f'Converting CSV to Parquet: {extract_file_path}')
 
     csv_df = pd.read_csv(BytesIO(file_content), low_memory=False)
-    parquet_file_path = os.path.splitext(extract_file_path)[0] + '.parquet'
+    # MODIFIED: the following line is redundant since the file path is already provided
+    # see line 77
+    # parquet_file_path = os.path.splitext(extract_file_path)[0] + '.parquet'
 
     # Ensure the parent directory exists before writing the Parquet file
     os.makedirs(os.path.dirname(parquet_file_path), exist_ok=True)

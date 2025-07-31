@@ -1,3 +1,4 @@
+
 import time
 from typing import Generator, List, Any
 
@@ -109,5 +110,3 @@ def run(s3_service: AwsS3Service, vault_service: VaultService, convert_to_parque
             log_message(log_level='Error',
                         message=f'Error when attempting to download document',
                         exception=e)
-
-
