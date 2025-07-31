@@ -1,3 +1,4 @@
+# +++
 import os
 import time
 from common.services.object_storage_service import ObjectStorageService
@@ -49,6 +50,7 @@ class AwsS3Service(ObjectStorageService):
                         context=None)
             raise e
 
+    # note: retrieving object metadata
     def head_object(self, key: str):
         log_message(log_level='Debug',
                     message=f'Retrieving object metadata from {self.bucket_name}/{key}')
@@ -163,10 +165,14 @@ class AwsS3Service(ObjectStorageService):
                     message=f'Downloading object from {self.bucket_name}/{key}')
         try:
             os.makedirs(os.path.dirname(filename), exist_ok=True)
-            directory = os.path.dirname(filename)
-
-            if directory and not os.path.exists(directory):
-                os.makedirs(directory, exist_ok=True)
+            # MODIFIED: Ensure directory exists before downloading
+            # the below code is not needed as os.makedirs already handles it
+            # directory = os.path.dirname(filename)
+            # if directory and not os.path.exists(directory):
+            #     os.makedirs(directory, exist_ok=True)
+                
+            # key - The path/location of the file in S3 (the S3 object key)
+            # filename - The path/location where you want to save the file on your local machine
 
             response = self.s3_client.download_file(Bucket=self.bucket_name, Key=key, Filename=filename)
             log_message(log_level='Info',

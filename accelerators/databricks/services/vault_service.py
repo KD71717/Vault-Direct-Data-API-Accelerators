@@ -1,3 +1,4 @@
+# +++ this code is never used
 from common.api.client.vault_client import VaultClient
 from common.api.model.response.direct_data_response import DirectDataResponse
 from common.api.model.response.vault_response import VaultResponse
