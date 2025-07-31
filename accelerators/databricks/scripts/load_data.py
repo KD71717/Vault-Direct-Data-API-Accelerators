@@ -19,7 +19,7 @@ def handle_metadata_updates(s3_service: AwsS3Service,
 
     file_path = f"{starting_directory}/{os.path.splitext(metadata_updates['file'].iloc[0])[0] + file_extension}"
 
-    # Download the file from S3
+    # Download the file from S3, TODO why are the arguments the same?
     s3_service.download_file(file_path, file_path)
 
     if file_extension == ".parquet":
@@ -75,7 +75,7 @@ def handle_metadata_deletes(s3_service: AwsS3Service,
     # Check if the file exists in S3
     s3_service.head_object(key=file_path)
 
-    # Download the file from S3
+    # Download the file from S3, TODO why are the arguments the same?
     s3_service.download_file(file_path, file_path)
 
     if file_extension == ".parquet":
@@ -162,7 +162,7 @@ def run(s3_service: AwsS3Service, databricks_service: DatabricksService, direct_
         # Check if the file exists in S3
         s3_service.head_object(key=manifest_filepath)
 
-        # Download the file from S3
+        # Download the file from S3, TODO different from the next download_file call, why?
         s3_service.download_file(manifest_filepath, output_filepath)
 
         log_message(log_level='Info',
@@ -185,7 +185,7 @@ def run(s3_service: AwsS3Service, databricks_service: DatabricksService, direct_
             # Check if the file exists in S3
             s3_service.head_object(key=metadata_filepath)
 
-            # Download the file from S3
+            # Download the file from S3, TODO shouldn't the second argument be output_filepath?
             s3_service.download_file(metadata_filepath, metadata_filepath)
 
             if file_extension == ".parquet":

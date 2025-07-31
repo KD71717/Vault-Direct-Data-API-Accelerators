@@ -42,7 +42,7 @@ def run(s3_service: AwsS3Service, vault_service: VaultService, convert_to_parque
     # Check if the file exists in S3
     s3_service.head_object(key=f"{document_filepath}")
 
-    # Download the file from S3
+    # Download the file from S3, TODO why are the arguments the same?
     s3_service.download_file(document_filepath, document_filepath)
 
     if file_extension == '.parquet':

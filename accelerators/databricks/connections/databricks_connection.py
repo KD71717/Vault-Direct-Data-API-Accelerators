@@ -1,4 +1,5 @@
 # +++
+# TODO: many instances of lack of input verification and error handling
 from databricks import sql
 
 from common.connections.database_connection import DatabaseConnection
@@ -63,7 +64,7 @@ class DatabricksConnection(DatabaseConnection):
         cursor.close()
         return result
 
-# TODO: modify the information for
+# TODO: need to modify the information in
 # connector_config.json
 # vapil_settings.json
 # why is there a time end for direct data?

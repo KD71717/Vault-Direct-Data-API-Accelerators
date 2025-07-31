@@ -147,7 +147,7 @@ def main():
 if __name__ == "__main__":
   main()
 ```
-* **`direct_data_to_object_storage.py`**: This script handles downloading a designated Direct Data filet from Vault, and uploading the Direct Data tar.gz file to an Object Storage system, currently S3. This script handles multiple file parts natively.
+* **`direct_data_to_object_storage.py`**: This script handles downloading a designated Direct Data file from Vault, and uploading the Direct Data tar.gz file to an Object Storage system, currently S3. This script handles multiple file parts natively.
 
 ![direct-data-to-object-storage](images/direct-data-to-object-storage.png)
 
@@ -171,23 +171,10 @@ To use the Direct Data accelerators, see the following prerequisites. Individual
 
 The following accelerator implementations are currently available as working examples.
 
-### Snowflake Accelerator
-
-This accelerator leverages the ability to integrate Snowflake with S3 and seamlessly load data directly from S3 into Snowflake. This process utilizes the [`COPY INTO`](https://docs.snowflake.com/en/sql-reference/sql/copy-into-table) command that allows for loading directly from a file in addition to inferring the table schema from the same file. Inferring schemas is generally recommended only when dealing with Full files.
-
-![snowflake-accelerator](images/snowflake-accelerator.png)
-
-**Pre-requisites**
-* [S3 to Snowflake integration](https://docs.snowflake.com/en/user-guide/data-load-s3-config-storage-integration)
-* [S3 Stage](https://docs.snowflake.com/en/user-guide/data-load-s3-create-stage)
-* The following must be present:
-    * [Database](https://docs.snowflake.com/en/sql-reference/sql/create-database)
-    * [Schema](https://docs.snowflake.com/en/sql-reference/sql/create-schema)
-    * A [role](https://docs.snowflake.com/en/sql-reference/sql/create-role) with desired permissions
-
 ### Databricks Accelerator
 
 There are [several ways](https://docs.databricks.com/aws/en/ingestion/) to handle and load data into Databricks. The DataBricks accelerator utilizes the `COPY INTO` command to load data directly from S3 to Delta Lake.
+# TODO is the copy into command a good one to use for our use case?
 
 ![databricks-accelerator](images/databricks-accelerator.png)
 
@@ -199,16 +186,4 @@ There are [several ways](https://docs.databricks.com/aws/en/ingestion/) to handl
 
 **Considerations**
 * The data that gets loaded into Delta Lake tables are loaded as a String data type.
-
-### Redshift Accelerator
-
-Similar to the other accelerators, the Redshift accelerator leverages the [`COPY`](https://docs.aws.amazon.com/redshift/latest/dg/r_COPY.html) command to load data into tables from S3. Redshift does allow loading using CSV and PARQUET formats, but the schemas cannot be inferred. Therefore, the table schemas will always be handled manually.
-
-![redshift-accelerator](images/redshift-accelerator.png)
-
-**Pre-requisites**
-* [Appropriate permissions and access to Redshift and S3](https://docs.aws.amazon.com/redshift/latest/dg/r_COPY.html#r_COPY-permissions)
-
-**Considerations**
-* Amazon Redshift [character type](https://docs.aws.amazon.com/redshift/latest/dg/r_Character_types.html) has a limit of 65535 bytes.
-* Due to this limit, some Rich Text field data may be truncated.
+# TODO this might not be acceptable and may deviate from DLT implementation

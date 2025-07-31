@@ -51,7 +51,7 @@ class DatabricksService(DatabaseService):
         WHERE table_name = '{table.lower()}';
         """
 
-        query_result = self.db_connection.execute_query(query)
+        query_result = self.db_connection.execute_query(query) # TODO query_result[0][0] assumes the query returns results without checking if the result set is empty.
         return query_result[0][0] > 0
 
     def retrieve_column_info(self, table_name):
@@ -91,7 +91,7 @@ class DatabricksService(DatabaseService):
         # note: seems like the metadata table is used to store information about all tables
         column_definitions = {col: ["STRING"] for col in metadata_table.columns}
         new_metadata_df = pd.DataFrame.from_dict(column_definitions).astype(str)
-        new_metadata_df.loc["length"] = 1000 # note: setting a default length for all columns, TODO is this appropriate?
+        new_metadata_df.loc["length"] = 1000 # TODO: setting a default length for all columns, is this appropriate?
         # note: string vs int
         new_metadata_df = new_metadata_df.T.reset_index()
         new_metadata_df.columns = ["column_name", "type", "length"]
@@ -170,8 +170,9 @@ class DatabricksService(DatabaseService):
                                 WHEN NOT MATCHED THEN
                                     INSERT  *; 
                             """)
-
-        elif extract_type == "full" or "log":
+        # MODIFIED: Added elif condition to handle full and log extracts
+        elif extract_type == "full" or extract_type == "log":
+        # elif extract_type == "full" or "log":
 
             if file_format_name == "PARQUET":
                 self.db_connection.execute_query(f"""
@@ -183,7 +184,7 @@ class DatabricksService(DatabaseService):
 
 
             self.db_connection.execute_query(f"""
-                        COPY INTO {self.schema}.{table_name}
+                        COPY INTO {self.schema}.{table_name} # TODO The code sometimes uses {self.catalog}.{self.schema} and sometimes just {self.schema}
                         FROM '{s3_uri}'
                         FILEFORMAT = {file_format_name}
                         FORMAT_OPTIONS ('inferSchema' ='{self.infer_schema}',

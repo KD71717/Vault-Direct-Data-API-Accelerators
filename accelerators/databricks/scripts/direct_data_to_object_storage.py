@@ -1,3 +1,4 @@
+
 import sys
 
 sys.path.append('.')
@@ -61,7 +62,7 @@ def run(vault_service: VaultService, s3_service: AwsS3Service, direct_data_param
         # List the Direct Data files of the specified extract type and time window
         extract_type: str = f"{direct_data_params['extract_type']}_directdata"
         start_time: str = direct_data_params['start_time']
-        stop_time: str = direct_data_params['stop_time'] # TODO
+        stop_time: str = direct_data_params['stop_time']
         list_direct_data_files_response: DirectDataResponse = vault_service.retrieve_available_direct_data_files(
             extract_type=extract_type,
             start_time=start_time,
