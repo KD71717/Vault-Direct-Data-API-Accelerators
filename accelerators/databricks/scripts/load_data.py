@@ -193,7 +193,7 @@ def run(s3_service: AwsS3Service, databricks_service: DatabricksService, direct_
             else:
                 metadata_table = pd.read_csv(metadata_filepath)
 
-            if file_extension != ".parquet":
+            if file_extension != ".parquet": # TODO is that no action on parquet files because they are already in the right format and tables are created automatically?
                 log_message(log_level='Info',
                             message='Creating tables from metadata file')
                 databricks_service.create_all_tables(starting_directory, metadata_table)
